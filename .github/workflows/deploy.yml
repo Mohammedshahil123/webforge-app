@@ -1,0 +1,23 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Build Docker Image
+      run: docker build -t webforge-app .
+
+    - name: Stop Old Container (if running)
+      run: docker rm -f webforge-container || true
+
+    - name: Run New Container
+      run: docker run -d -p 5490:5490 --name webforge-container webforge-app
